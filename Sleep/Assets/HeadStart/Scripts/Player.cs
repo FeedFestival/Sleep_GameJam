@@ -27,7 +27,24 @@ public class Player : MonoBehaviour
         {
             Goal.position = point.Value;
         }
-        _agent.destination = Goal.position;
+        MoveTo(Goal.position);
+    }
+
+    internal void MoveTo(Vector3 pos)
+    {
+        _agent.destination = pos;
+    }
+
+    void Update()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        if (h != 0 || v != 0)
+        {
+            Vector3 movement = new Vector3(h, 0f, v);
+            SetNewPosition(transform.position + movement);
+        }
     }
 
     void LateUpdate()
