@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetNewPosition();
+        // SetNewPosition();
     }
 
     internal void SetNewPosition(Vector3? point = null)
