@@ -58,3 +58,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+Sleep/Library/
+Sleep/ProjectSettings/InputManager.asset
+Sleep/ProjectSettings/
+Sleep/Temp/
