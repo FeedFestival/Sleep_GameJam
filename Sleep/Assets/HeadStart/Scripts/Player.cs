@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public Transform Goal;
     private NavMeshAgent _agent;
     public Vector3 CamFollowOffset;
+    public bool IsMoving;
 
     void Awake()
     {
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour
 
     internal void MoveTo(Vector3 pos)
     {
+        IsMoving = true;
         _agent.destination = pos;
     }
 
@@ -49,16 +51,36 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 camPos = new Vector3(
-            transform.position.x + CamFollowOffset.x,
-            transform.position.y + CamFollowOffset.y,
-            transform.position.z + CamFollowOffset.z
+        if (IsMoving)
+        {
+            Vector3 camPos = new Vector3(
+                        transform.position.x + CamFollowOffset.x,
+                        transform.position.y + CamFollowOffset.y,
+                        transform.position.z + CamFollowOffset.z
+                        );
+            // Debug.Log(camPos);
+            Camera.main.transform.position = new Vector3(
+                camPos.x,
+                Camera.main.transform.position.y,
+                camPos.z
             );
-        // Debug.Log(camPos);
-        Camera.main.transform.position = new Vector3(
-            camPos.x,
-            Camera.main.transform.position.y,
-            camPos.z
-        );
+
+            DidWeReachDestionation();
+        }
+    }
+
+    private void DidWeReachDestionation()
+    {
+        // Check if we've reached the destination
+        if (!_agent.pathPending)
+        {
+            if (_agent.remainingDistance <= _agent.stoppingDistance)
+            {
+                if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)
+                {
+                    IsMoving = false;
+                }
+            }
+        }
     }
 }

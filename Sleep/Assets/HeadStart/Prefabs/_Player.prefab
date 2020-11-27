@@ -106,8 +106,8 @@ GameObject:
   - component: {fileID: 1093388337}
   - component: {fileID: 1093388336}
   m_Layer: 0
-  m_Name: Altceva
-  m_TagString: Untagged
+  m_Name: PlayerBody
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -182,7 +182,7 @@ BoxCollider:
   m_GameObject: {fileID: 1093388335}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -235,6 +235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Goal: {fileID: 0}
   CamFollowOffset: {x: -2, y: 0, z: -14}
+  IsMoving: 0
 --- !u!195 &224637661
 NavMeshAgent:
   m_ObjectHideFlags: 0

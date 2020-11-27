@@ -11,6 +11,8 @@ public class PrefabBank : MonoBehaviour
     public GameObject MusicManagerPrefab;
     public GameObject TimerPrefab;
 
+    public GameObject Enemy;
+    public GameObject EnemyGoal;
     void Awake()
     {
         _prefabBank = this;
