@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     public Transform Goal;
     private NavMeshAgent _agent;
+    public Vector3 CamFollowOffset;
 
     void Awake()
     {
@@ -25,7 +26,22 @@ public class Player : MonoBehaviour
         if (point.HasValue)
         {
             Goal.position = point.Value;
-        }   
+        }
         _agent.destination = Goal.position;
+    }
+
+    void LateUpdate()
+    {
+        Vector3 camPos = new Vector3(
+            transform.position.x + CamFollowOffset.x,
+            transform.position.y + CamFollowOffset.y,
+            transform.position.z + CamFollowOffset.z
+            );
+        // Debug.Log(camPos);
+        Camera.main.transform.position = new Vector3(
+            camPos.x,
+            Camera.main.transform.position.y,
+            camPos.z
+        );
     }
 }
