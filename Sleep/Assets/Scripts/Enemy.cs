@@ -5,11 +5,15 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public Transform Goal;
+    public PieceGoal Goal;
+    public GameObject Piece;
+    private IPiece _piece;
     private NavMeshAgent _agent;
     private bool _followPlayer;
     public bool IsMoving;
     private Vector3? _dirToPlayer;
+    public SensorTrigger VisualSensorTrigger;
+    public SensorTrigger AttackRangeSensorTrigger;
     void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -18,6 +22,11 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _piece = Piece.GetComponent<IPiece>();
+
+        VisualSensorTrigger.ShowIndicator(false);
+        AttackRangeSensorTrigger.ShowIndicator(false);
+
         SetNewPosition();
     }
 
@@ -25,9 +34,9 @@ public class Enemy : MonoBehaviour
     {
         if (point.HasValue)
         {
-            Goal.position = point.Value;
+            Goal.transform.position = point.Value;
         }
-        MoveTo(Goal.position);
+        MoveTo(Goal.transform.position);
     }
 
     internal void MoveTo(Vector3 pos)
@@ -44,22 +53,46 @@ public class Enemy : MonoBehaviour
     public void AttackPlayer()
     {
         Debug.Log("Atack Playerul");
-        UIController._.DialogController.ShowDialog(true, GameplayState.Failed);
+        _followPlayer = false;
+        ReachedGoal();
+        _agent.isStopped = true;
+
+        // do attack
+        Vector3 dir = Game._.Player.transform.position - transform.position;
+        Vector3 rot = Quaternion.LookRotation(dir, Vector3.up).eulerAngles;
+        // Debug.Log("rot: " + rot);
+        // Debug.Log("Piece.transform.eulerAngles: " + Piece.transform.eulerAngles);
+        Piece.transform.eulerAngles = rot;
+
+        _piece.Attack(AfterAttack);
+
+        _dirToPlayer = null;
     }
 
-    // void OnDrawGizmosSelected()
-    // {
-    //     // Draws a 5 unit long red line in front of the object
-    //     Gizmos.color = Color.red;
-    //     Vector3 direction = transform.TransformDirection(Vector3.forward) * 5;
-    //     Gizmos.DrawRay(transform.position, direction);
-    // }
+    private void AfterAttack()
+    {
+        Debug.Log("After Attack");
+        _agent.isStopped = false;
+        bool canWeSeePlayer = CanWeSeePlayer();
+        Debug.Log("canWeSeePlayer: " + canWeSeePlayer);
+        if (canWeSeePlayer)
+        {
+            _followPlayer = true;
+            SetNewPosition(Game._.Player.transform.position);
+        }
+        else
+        {
+            ReachedGoal();
+        }
+    }
 
     void LateUpdate()
     {
         if (_followPlayer == true)
         {
-            if (CanWeSeePlayer())
+            bool canWeSeePlayer = CanWeSeePlayer();
+            // Debug.Log("canWeSeePlayer: " + canWeSeePlayer);
+            if (canWeSeePlayer)
             {
                 SetNewPosition(Game._.Player.transform.position);
             }

@@ -53,6 +53,10 @@ public class LoadingController : MonoBehaviour
     public void TransitionOverlay(bool show = true, bool instant = false, OnTransitionEnd onTransitionEnd = null)
     {
         _isFadeIn = show;
+        if (_overlay == null)
+        {
+            return;
+        }
         if (instant == false)
         {
             _onTransitionEnd = onTransitionEnd;

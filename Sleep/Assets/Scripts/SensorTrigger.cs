@@ -6,6 +6,7 @@ public class SensorTrigger : MonoBehaviour
 {
     public Enemy ParentEnemy;
     public SensorType SensorType;
+    public SpriteRenderer Indicator;
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
@@ -19,6 +20,11 @@ public class SensorTrigger : MonoBehaviour
                 ParentEnemy.AttackPlayer();
             }
         }
+    }
+
+    public void ShowIndicator(bool show = true)
+    {
+        Indicator.gameObject.SetActive(show);
     }
 }
 

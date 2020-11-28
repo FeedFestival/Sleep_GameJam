@@ -26,7 +26,8 @@ public class OnlyLevel : MonoBehaviour, ILevel
             startPos = new Vector3(x, 0, z);
             go = CreateFromPrefab(PrefabBank._.EnemyGoal, startPos);
             go.transform.SetParent(NavT);
-            enemy.Goal = go.transform;
+            enemy.Goal = go.GetComponent<PieceGoal>();
+            enemy.Goal.GoalIndicator.gameObject.SetActive(false);
 
             Enemies.Add(enemy);
         }
