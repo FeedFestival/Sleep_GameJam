@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a483da88052d0654bb8f4da6554e6e8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NoHealthImage: {fileID: 4553502507966564417}
   HealthImage: {fileID: 4553502508136992124}
 --- !u!1 &4553502507966564419
 GameObject:

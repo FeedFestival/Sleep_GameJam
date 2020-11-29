@@ -6,6 +6,8 @@ using Assets.Scripts.utils;
 
 public class HealthBar : MonoBehaviour
 {
+    private Image _healthBarImage;
+    public Image NoHealthImage;
     public Image HealthImage;
     private RectTransform _canvasRect;
     private Transform UnitToFollow;
@@ -23,6 +25,7 @@ public class HealthBar : MonoBehaviour
         _stats = stats;
         UnitToFollow = hpTarget;
         _canvasRect = canvas;
+        _healthBarImage = GetComponent<Image>();
         UI_Element = this.GetComponent<RectTransform>();
         CalculateHealthBar();
     }
@@ -51,6 +54,18 @@ public class HealthBar : MonoBehaviour
     public void CalculateHealthBar()
     {
         var perc = percent.What(_stats.CurrentHealth, _stats.Health);
+        if (perc == 100)
+        {
+            _healthBarImage.enabled = false;
+            NoHealthImage.enabled = false;
+            HealthImage.enabled = false;
+        }
+        else
+        {
+            _healthBarImage.enabled = true;
+            NoHealthImage.enabled = true;
+            HealthImage.enabled = true;
+        }
         var currentHealthEquivalent = percent.Find(_fullHealthEquivalent, perc);
         HealthImage.rectTransform.sizeDelta = new Vector2(currentHealthEquivalent, HealthImage.rectTransform.sizeDelta.y);
     }

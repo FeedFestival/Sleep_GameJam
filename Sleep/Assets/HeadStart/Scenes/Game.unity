@@ -684,7 +684,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 233104021}
           m_MethodName: OnRightClick
-          m_Mode: 1
+          m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1488,7 +1488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavT: {fileID: 701089292}
-  EnemiesCount: 30
+  EnemiesCount: 0
   Enemies: []
 --- !u!1001 &664120018
 PrefabInstance:

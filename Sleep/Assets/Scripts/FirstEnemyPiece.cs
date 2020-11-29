@@ -70,7 +70,7 @@ public class FirstEnemyPiece : MonoBehaviour, IPiece
     public void CheckHit()
     {
         center = CastBox.position;
-        halfExtents = CastBox.localScale;
+        halfExtents = CastBox.localScale / 2;
         direction = CastBox.position - transform.position;
         Quaternion orientation = CastBox.rotation;
         eulerRot = orientation.eulerAngles;

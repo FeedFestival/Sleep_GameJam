@@ -12,19 +12,29 @@ public class MoveListener : MonoBehaviour
         _layerMask = CreateLayerMask(aExclude: false, LayerMask.NameToLayer("Navigation"));
     }
 
-    public void OnRightClick()
+    public void OnRightClick(BaseEventData eventData)
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, _layerMask))
-        {
-            Transform objectHit = hit.transform;
-            // Debug.Log("objectHit.gameObject.name: " + objectHit.gameObject.name);
+        PointerEventData pointerData = (eventData as PointerEventData);
 
-            if (objectHit.gameObject.tag == "Floor")
+        if (pointerData.button == PointerEventData.InputButton.Right)
+        {
+
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, _layerMask))
             {
-                Game._.Player.PieceMover.GoTo(hit.point);
+                Transform objectHit = hit.transform;
+                // Debug.Log("objectHit.gameObject.name: " + objectHit.gameObject.name);
+
+                if (objectHit.gameObject.tag == "Floor")
+                {
+                    Game._.Player.PieceMover.GoTo(hit.point);
+                }
             }
+        }
+        else
+        {
+            Debug.Log("Shoot");
         }
 
         // Debug.Log("targetPos: " + targetPos);
