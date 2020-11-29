@@ -23,5 +23,11 @@ public class PlayerProjectile : MonoBehaviour
 
         _moveTwid = LeanTween.move(gameObject, newPos, 3f).id;
         LeanTween.descr(_moveTwid.Value).setEase(LeanTweenType.linear);
+        LeanTween.descr(_moveTwid.Value).setOnComplete(() =>
+        {
+            LeanTween.cancel(_moveTwid.Value);
+            _moveTwid = null;
+            Destroy(gameObject);
+        });
     }
 }

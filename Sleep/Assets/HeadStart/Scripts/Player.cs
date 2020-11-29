@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     private IEnumerator _checkState;
     private Vector3 _camPos;
     private Stats _stats;
+    public bool ShootingCooldown;
+    private IEnumerator _waitForShootingCooldown;
 
     void Awake()
     {
@@ -67,6 +69,11 @@ public class Player : MonoBehaviour
 
     internal void ShootProjectile(Vector3 point)
     {
+        if (ShootingCooldown)
+        {
+            return;
+        }
+
         var go = Game._.Level<OnlyLevel>().CreateFromPrefab(PrefabBank._.Projectile, transform.position);
         var projectile = go.GetComponent<PlayerProjectile>();
 
@@ -74,6 +81,16 @@ public class Player : MonoBehaviour
         var distance = Vector3.Distance(transform.position, point);
 
         projectile.GoTowards(dir, Id);
+
+        ShootingCooldown = true;
+        _waitForShootingCooldown = WaitForShootingCooldown();
+        StartCoroutine(_waitForShootingCooldown);
+    }
+
+    IEnumerator WaitForShootingCooldown()
+    {
+        yield return new WaitForSeconds(0.7f);
+        ShootingCooldown = false;
     }
 
     void Update()
