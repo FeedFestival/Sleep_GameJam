@@ -10,7 +10,6 @@ public class MoveListener : MonoBehaviour
     void Start()
     {
         _layerMask = CreateLayerMask(aExclude: false, LayerMask.NameToLayer("Navigation"));
-        // Debug.Log("_layerMask: " + _layerMask);
     }
 
     public void OnRightClick()
@@ -32,7 +31,7 @@ public class MoveListener : MonoBehaviour
         // Game._.Player.Goal.position = targetPos;
     }
 
-    private static int CreateLayerMask(bool aExclude, params int[] aLayers)
+    private int CreateLayerMask(bool aExclude, params int[] aLayers)
     {
         int v = 0;
         foreach (var L in aLayers)

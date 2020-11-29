@@ -17,17 +17,20 @@ public class Enemy : MonoBehaviour
     private IEnumerator _think;
     private int? _lookAtTwid;
     private Rigidbody _rb;
+    private Stats _stats;
 
     // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _piece = Piece.GetComponent<IPiece>();
+        _stats = GetComponent<Stats>();
+        _stats.Init();
 
         VisualSensorTrigger.ShowIndicator(false);
         AttackRangeSensorTrigger.ShowIndicator(false);
 
-        EnemyState = EnemyState.Idle;
+        EnemyState = EnemyState.DoingStuff;
 
         PieceMover.Init(this, _piece, ReachedGoal, CloseToTarget);
         PieceMover.GoTo();
@@ -75,7 +78,6 @@ public class Enemy : MonoBehaviour
 
         if (EnemyState == EnemyState.Idle)
         {
-            // Let's look for something to do
             DoJob();
         }
         else if (EnemyState == EnemyState.FollowingPlayer)

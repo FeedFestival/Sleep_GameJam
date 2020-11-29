@@ -15,16 +15,19 @@ public class Player : MonoBehaviour
     private float _iqTime;
     private IEnumerator _checkState;
     private Vector3 _camPos;
+    private Stats _stats;
 
     void Awake()
     {
         _piece = Piece.GetComponent<IPiece>();
+        _stats = GetComponent<Stats>();
 
         PieceMover.Init(null, _piece, ReachedGoal);
     }
 
     void Start()
     {
+        _stats.Init();
         _iqTime = UnityEngine.Random.Range(0, 25) * 0.01f;
 
         _camPos = new Vector3(transform.position.x + CamFollowOffset.x,

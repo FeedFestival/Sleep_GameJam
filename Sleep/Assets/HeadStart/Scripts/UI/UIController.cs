@@ -15,6 +15,8 @@ public class UIController : MonoBehaviour
     public UiDataController UiDataController;
     public LoadingController LoadingController;
     public MainMenu MainMenu;
+    public GameObject HealthBarsPanel;
+    public RectTransform Canvas;
 
     public void Init()
     {

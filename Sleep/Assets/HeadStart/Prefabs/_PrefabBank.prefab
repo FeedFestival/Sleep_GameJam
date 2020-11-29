@@ -52,3 +52,5 @@ MonoBehaviour:
   Enemy: {fileID: 8861879315081428581, guid: de1255b0bef78f8449cdf5252ba83d2f, type: 3}
   EnemyGoal: {fileID: 4958872802432467536, guid: 7af7194afcde5da4ea9a10f2e689e251,
     type: 3}
+  HealthBar: {fileID: 4553502506764803266, guid: 6994ec70fdfc39247a3e8d40fe6d2a6d,
+    type: 3}

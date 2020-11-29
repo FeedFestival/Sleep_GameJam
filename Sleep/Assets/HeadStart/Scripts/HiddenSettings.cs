@@ -39,4 +39,7 @@ public class HiddenSettings : MonoBehaviour
     public Color BlueColor;
     public Color YellowColor;
     public Color LightBlueColor;
+
+    public Color PlayerHpBars;
+    public Color EnemyHpBars;
 }
