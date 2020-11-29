@@ -34,7 +34,18 @@ public class MoveListener : MonoBehaviour
         }
         else
         {
-            Debug.Log("Shoot");
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, _layerMask))
+            {
+                Transform objectHit = hit.transform;
+                // Debug.Log("objectHit.gameObject.name: " + objectHit.gameObject.name);
+
+                if (objectHit.gameObject.tag == "Floor")
+                {
+                    Game._.Player.ShootProjectile(hit.point);
+                }
+            }
         }
 
         // Debug.Log("targetPos: " + targetPos);

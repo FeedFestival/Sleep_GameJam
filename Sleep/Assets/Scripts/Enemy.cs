@@ -18,14 +18,18 @@ public class Enemy : MonoBehaviour
     private int? _lookAtTwid;
     private Rigidbody _rb;
     private Stats _stats;
+    public DamageTaker DamageTaker;
 
     // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _piece = Piece.GetComponent<IPiece>();
+        (_piece as FirstEnemyPiece).ParentId = Id;
         _stats = GetComponent<Stats>();
         _stats.Init();
+
+        DamageTaker.ParentId = Id;
 
         VisualSensorTrigger.ShowIndicator(false);
         AttackRangeSensorTrigger.ShowIndicator(false);

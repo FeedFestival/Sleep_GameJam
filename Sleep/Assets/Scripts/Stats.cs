@@ -21,7 +21,15 @@ public class Stats : MonoBehaviour
                 if (currentHealth < 0)
                 {
                     healthBar.gameObject.SetActive(false);
-                    UIController._.DialogController.ShowDialog(true, GameplayState.Failed);
+
+                    if (IAm == IAm.Ally)
+                    {
+                        UIController._.DialogController.ShowDialog(true, GameplayState.Failed);
+                    }
+                    else
+                    {
+                        Destroy(this.gameObject);
+                    }
                 }
                 else
                 {

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FirstEnemyPiece : MonoBehaviour, IPiece
 {
+    public int ParentId;
     public Animator Animator;
     public AttackIndicator BasicAttack1;
     public float BasicAttack1WindupSpeed;
@@ -79,7 +80,7 @@ public class FirstEnemyPiece : MonoBehaviour, IPiece
         {
             Debug.Log("Hit : " + hit.collider.name);
             DamageTaker damageTaker = hit.collider.gameObject.GetComponent<DamageTaker>();
-            if (damageTaker != null)
+            if (damageTaker != null && (ParentId != damageTaker.ParentId))
             {
                 damageTaker.Stats.CurrentHealth = damageTaker.Stats.CurrentHealth - 15;
             }

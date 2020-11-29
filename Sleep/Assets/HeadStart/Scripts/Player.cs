@@ -65,6 +65,17 @@ public class Player : MonoBehaviour
         DoCheckState();
     }
 
+    internal void ShootProjectile(Vector3 point)
+    {
+        var go = Game._.Level<OnlyLevel>().CreateFromPrefab(PrefabBank._.Projectile, transform.position);
+        var projectile = go.GetComponent<PlayerProjectile>();
+
+        var dir = (point - transform.position).normalized;
+        var distance = Vector3.Distance(transform.position, point);
+
+        projectile.GoTowards(dir, Id);
+    }
+
     void Update()
     {
         float h = Input.GetAxis("Horizontal");

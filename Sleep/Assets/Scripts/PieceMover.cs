@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class PieceMover : MonoBehaviour
 {
-    public int Id;
+    public int Id;  // this is not requrired - only for player
     public Enemy Parent;
     public bool IsMoving;
     public bool FollowingPlayer;

@@ -1488,7 +1488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavT: {fileID: 701089292}
-  EnemiesCount: 0
+  EnemiesCount: 40
   Enemies: []
 --- !u!1001 &664120018
 PrefabInstance:

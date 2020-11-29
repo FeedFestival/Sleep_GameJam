@@ -54,3 +54,5 @@ MonoBehaviour:
     type: 3}
   HealthBar: {fileID: 4553502506764803266, guid: 6994ec70fdfc39247a3e8d40fe6d2a6d,
     type: 3}
+  Projectile: {fileID: 440931728497391231, guid: 922cb20d5434296429ea771f7809a8f3,
+    type: 3}

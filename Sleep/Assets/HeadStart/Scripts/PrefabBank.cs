@@ -14,6 +14,7 @@ public class PrefabBank : MonoBehaviour
     public GameObject Enemy;
     public GameObject EnemyGoal;
     public GameObject HealthBar;
+    public GameObject Projectile;
     void Awake()
     {
         _prefabBank = this;
