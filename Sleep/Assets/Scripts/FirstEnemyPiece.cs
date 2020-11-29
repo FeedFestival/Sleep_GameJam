@@ -4,22 +4,57 @@ using UnityEngine;
 
 public class FirstEnemyPiece : MonoBehaviour, IPiece
 {
+    public Animator Animator;
     public AttackIndicator BasicAttack1;
+    public float BasicAttack1WindupSpeed;
+    // public float BasicAttack1;
     private AfterAttack _afterAttack;
+
+    public void SetState(PieceState pieceState)
+    {
+        switch (pieceState)
+        {
+            case PieceState.Attack:
+                Animator.SetBool(PieceState.Attack.ToString(), true);
+                Animator.SetBool(PieceState.AttackWindup.ToString(), false);
+                break;
+            case PieceState.AttackWindup:
+                Animator.SetBool(PieceState.AttackWindup.ToString(), true);
+                Animator.SetBool(PieceState.IsMoving.ToString(), false);
+                break;
+            case PieceState.IsMoving:
+                Animator.SetBool(PieceState.IsMoving.ToString(), true);
+                break;
+            case PieceState.Idle:
+            default:
+                Animator.SetBool(PieceState.IsMoving.ToString(), false);
+                break;
+        }
+    }
 
     public void Attack(AfterAttack afterAttack)
     {
         _afterAttack = afterAttack;
 
-        BasicAttack1.ShowSprite();
+        SetState(PieceState.AttackWindup);
 
-        BasicAttack1.Windup(1f, ExecuteAttack);
+        BasicAttack1.ShowSprite();
+        BasicAttack1.Windup(BasicAttack1WindupSpeed, ExecuteAttack);
     }
 
     public void ExecuteAttack()
     {
-        Debug.Log("Execute Attack");
+        SetState(PieceState.Attack);
 
-        _afterAttack();
+        Timer._.iWait(() =>
+        {
+            Animator.SetBool(PieceState.Attack.ToString(), false);
+            _afterAttack();
+        }, 1f);
     }
+}
+
+public enum PieceState
+{
+    Idle, IsMoving, AttackWindup, Attack
 }

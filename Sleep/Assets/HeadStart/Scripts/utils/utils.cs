@@ -12,7 +12,7 @@ namespace Assets.Scripts.utils
 {
     public static class utils
     {
-        public static readonly string _version = "1.0.2";
+        public static readonly string _version = "1.0.3";
         public static string ConvertNumberToK(int num)
         {
             if (num >= 1000)
@@ -25,6 +25,25 @@ namespace Assets.Scripts.utils
         {
             var randomNumber = Random.Range(0, 100);
             return (randomNumber > 50) ? 1 : 0;
+        }
+
+        public static Color SetColorAlpha(Color color, int value)
+        {
+            Color tempColor = color;
+            tempColor.a = GetAlphaValue(value);
+            return tempColor;
+        }
+
+        public static float GetAlphaValue(int value)
+        {
+            var perc = percent.What(value, 255);
+            return perc * 0.01f;
+        }
+
+        public static int GetRGBAAlphaValue(float value)
+        {
+            float perc = value * 100;
+            return (int)percent.Find(perc, 255);
         }
 
         public static void VarDump<T>(T obj)

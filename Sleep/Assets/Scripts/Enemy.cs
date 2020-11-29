@@ -1,68 +1,104 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public PieceGoal Goal;
+    public int Id;
     public GameObject Piece;
     private IPiece _piece;
-    private NavMeshAgent _agent;
-    private bool _followPlayer;
-    public bool IsMoving;
     private Vector3? _dirToPlayer;
     public SensorTrigger VisualSensorTrigger;
     public SensorTrigger AttackRangeSensorTrigger;
-    void Awake()
-    {
-        _agent = GetComponent<NavMeshAgent>();
-    }
+    public PieceMover PieceMover;
+    private float _queueTime;
+    private float _iqTime;
+    private IEnumerator _think;
+    private int? _lookAtTwid;
 
     // Start is called before the first frame update
     void Start()
     {
         _piece = Piece.GetComponent<IPiece>();
+        PieceMover = gameObject.GetComponent<PieceMover>();
 
         VisualSensorTrigger.ShowIndicator(false);
         AttackRangeSensorTrigger.ShowIndicator(false);
 
-        SetNewPosition();
-    }
+        PieceMover.Init(Id, _piece, ReachedGoal, CloseToTarget);
+        PieceMover.GoTo();
 
-    internal void SetNewPosition(Vector3? point = null)
-    {
-        if (point.HasValue)
+        _queueTime = Random.Range(0, 45) * 0.01f;
+        Debug.Log("_queueTime: " + _queueTime);
+        Timer._.iWait(() =>
         {
-            Goal.transform.position = point.Value;
+            _iqTime = Random.Range(0, 25) * 0.01f;
+            Debug.Log("_iqTime: " + _iqTime);
+            DoThink();
+        }, _queueTime);
+    }
+
+    void DoThink()
+    {
+        if (_think != null)
+        {
+            StopCoroutine(_think);
         }
-        MoveTo(Goal.transform.position);
+        _think = Think();
+        StartCoroutine(_think);
     }
 
-    internal void MoveTo(Vector3 pos)
+    IEnumerator Think()
     {
-        IsMoving = true;
-        _agent.destination = pos;
+        yield return new WaitForSeconds(_iqTime);
+
+        if (PieceMover.IsMoving)
+        {
+            if (PieceMover.NavAgent.steeringTarget.x != PieceMover.SteeringTarget.x
+                && PieceMover.NavAgent.steeringTarget.z != PieceMover.SteeringTarget.z)
+            {
+                PieceMover.SteeringTarget = PieceMover.NavAgent.steeringTarget;
+                Look(GetLookAtTarget(PieceMover.SteeringTarget));
+            }
+        }
+
+        DoThink();
     }
 
-    public void FollowPlayer()
+    public void CloseToTarget(TargetType targetType)
     {
-        _followPlayer = true;
+        switch (targetType)
+        {
+            case TargetType.AttackTarget:
+                AttackPlayer();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private Vector3 GetLookAtTarget(Vector3 target)
+    {
+        Vector3 dir = target - transform.position;
+        return Quaternion.LookRotation(dir, Vector3.up).eulerAngles;
+    }
+
+    private void Look(Vector3 target)
+    {
+        if (_lookAtTwid.HasValue)
+        {
+            LeanTween.cancel(_lookAtTwid.Value);
+            _lookAtTwid = null;
+        }
+        _lookAtTwid = LeanTween.rotateLocal(Piece.gameObject, target, 0.3f).id;
+        LeanTween.descr(_lookAtTwid.Value).setEase(LeanTweenType.easeOutCirc);
     }
 
     public void AttackPlayer()
     {
-        Debug.Log("Atack Playerul");
-        _followPlayer = false;
-        ReachedGoal();
-        _agent.isStopped = true;
+        PieceMover.Stop();
 
-        // do attack
-        Vector3 dir = Game._.Player.transform.position - transform.position;
-        Vector3 rot = Quaternion.LookRotation(dir, Vector3.up).eulerAngles;
-        // Debug.Log("rot: " + rot);
-        // Debug.Log("Piece.transform.eulerAngles: " + Piece.transform.eulerAngles);
-        Piece.transform.eulerAngles = rot;
+        Look(GetLookAtTarget(Game._.Player.transform.position));
 
         _piece.Attack(AfterAttack);
 
@@ -71,14 +107,21 @@ public class Enemy : MonoBehaviour
 
     private void AfterAttack()
     {
-        Debug.Log("After Attack");
-        _agent.isStopped = false;
+        bool isPlayerInAttackRange = IsPlayerInAttackRange();
+        Debug.Log("isPlayerInAttackRange: " + isPlayerInAttackRange);
+
+        if (isPlayerInAttackRange)
+        {
+            AttackPlayer();
+            return;
+        }
+
         bool canWeSeePlayer = CanWeSeePlayer();
         Debug.Log("canWeSeePlayer: " + canWeSeePlayer);
         if (canWeSeePlayer)
         {
-            _followPlayer = true;
-            SetNewPosition(Game._.Player.transform.position);
+            PieceMover.FollowingPlayer = true;
+            PieceMover.GoTo(Game._.Player.transform.position);
         }
         else
         {
@@ -86,15 +129,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private bool IsPlayerInAttackRange()
+    {
+        float distance = Vector2.Distance(Coord(), Game._.Player.Coord());
+        Debug.Log("distance: " + distance);
+        return distance < 2.5f;
+    }
+
     void LateUpdate()
     {
-        if (_followPlayer == true)
+        if (PieceMover.FollowingPlayer == true)
         {
             bool canWeSeePlayer = CanWeSeePlayer();
-            // Debug.Log("canWeSeePlayer: " + canWeSeePlayer);
             if (canWeSeePlayer)
             {
-                SetNewPosition(Game._.Player.transform.position);
+                PieceMover.GoTo(Game._.Player.transform.position);
             }
             else
             {
@@ -102,29 +151,9 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (IsMoving)
-        {
-            DidWeReachDestionation();
-        }
-
         if (_dirToPlayer.HasValue)
         {
             Debug.DrawRay(transform.position, _dirToPlayer.Value, Color.cyan);
-        }
-    }
-
-    private void DidWeReachDestionation()
-    {
-        // Check if we've reached the destination
-        if (!_agent.pathPending)
-        {
-            if (_agent.remainingDistance <= _agent.stoppingDistance)
-            {
-                if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)
-                {
-                    ReachedGoal();
-                }
-            }
         }
     }
 
@@ -145,15 +174,31 @@ public class Enemy : MonoBehaviour
 
     private void ReachedGoal()
     {
-        IsMoving = false;
+        Debug.Log("ReachedGoal()");
+        PieceMover.IsMoving = false;
+        _piece.SetState(PieceState.Idle);
+
         if (_dirToPlayer.HasValue == false)
         {
-            _followPlayer = false;
+            PieceMover.FollowingPlayer = false;
 
             float x = Random.Range(-49.0f, 49.0f);
             float z = Random.Range(-49.0f, 49.0f);
             Vector3 startPos = new Vector3(x, 0, z);
-            SetNewPosition(startPos);
+            PieceMover.GoTo(startPos);
         }
     }
+
+    public Vector2 Coord()
+    {
+        return new Vector2(
+            transform.position.x,
+            transform.position.z
+        );
+    }
+}
+
+public enum TargetType
+{
+    AttackTarget
 }

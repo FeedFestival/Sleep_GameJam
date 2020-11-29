@@ -8,6 +8,7 @@ public class OnlyLevel : MonoBehaviour, ILevel
     public Transform NavT;
     public int EnemiesCount;
     public List<Enemy> Enemies;
+    private int _uniqueIdCount;
 
     public void StartLevel()
     {
@@ -20,16 +21,20 @@ public class OnlyLevel : MonoBehaviour, ILevel
             Vector3 startPos = new Vector3(x, 0, z);
             GameObject go = CreateFromPrefab(PrefabBank._.Enemy, startPos);
             Enemy enemy = go.GetComponent<Enemy>();
+            enemy.Id = _uniqueIdCount;
 
             x = Random.Range(-49.0f, 49.0f);
             z = Random.Range(-49.0f, 49.0f);
             startPos = new Vector3(x, 0, z);
             go = CreateFromPrefab(PrefabBank._.EnemyGoal, startPos);
             go.transform.SetParent(NavT);
-            enemy.Goal = go.GetComponent<PieceGoal>();
-            enemy.Goal.GoalIndicator.gameObject.SetActive(false);
+            enemy.PieceMover.Goal = go.GetComponent<PieceGoal>();
+            enemy.PieceMover.Goal.ParentId = enemy.Id;
+            enemy.PieceMover.Goal.GoalIndicator.gameObject.SetActive(false);
 
             Enemies.Add(enemy);
+
+            _uniqueIdCount++;
         }
     }
 

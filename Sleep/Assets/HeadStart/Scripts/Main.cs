@@ -88,7 +88,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         Debug.Log("Main - Check Completed, starting...");
-        Timer._.InternalWait(() =>
+        Timer._.iWait(() =>
         {
             if (IsThisTheLoadingScene)
             {

@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class PieceGoal : MonoBehaviour
 {
+    public int ParentId;
     public SpriteRenderer GoalIndicator;
 }

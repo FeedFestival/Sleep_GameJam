@@ -6,5 +6,6 @@ public delegate void AfterAttack();
 
 public interface IPiece
 {
+    void SetState(PieceState pieceState);
     void Attack(AfterAttack afterAttack);
 }

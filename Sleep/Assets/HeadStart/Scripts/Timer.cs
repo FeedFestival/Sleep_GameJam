@@ -33,7 +33,7 @@ public class Timer : MonoBehaviour
     private string _fileName;
     private Queue<WaitOption> _internalWaits;
 
-    public void InternalWait(InternalWaitCallback internalWaitCallback, float? seconds = null)
+    public void iWait(InternalWaitCallback internalWaitCallback, float? seconds = null)
     {
         var waitOption = new WaitOption(internalWaitCallback, seconds);
         waitOption.WaitFunc = InternalWaitFunction(waitOption);

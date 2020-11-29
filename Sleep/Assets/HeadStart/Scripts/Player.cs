@@ -6,14 +6,15 @@ using UnityEngine.AI;
 
 public class Player : MonoBehaviour
 {
+    public int Id;
     public Transform Goal;
-    private NavMeshAgent _agent;
+    private NavMeshAgent NavAgent;
     public Vector3 CamFollowOffset;
     public bool IsMoving;
 
     void Awake()
     {
-        _agent = GetComponent<NavMeshAgent>();
+        NavAgent = GetComponent<NavMeshAgent>();
     }
 
     // Start is called before the first frame update
@@ -34,7 +35,7 @@ public class Player : MonoBehaviour
     internal void MoveTo(Vector3 pos)
     {
         IsMoving = true;
-        _agent.destination = pos;
+        NavAgent.destination = pos;
     }
 
     void Update()
@@ -72,15 +73,23 @@ public class Player : MonoBehaviour
     private void DidWeReachDestionation()
     {
         // Check if we've reached the destination
-        if (!_agent.pathPending)
+        if (!NavAgent.pathPending)
         {
-            if (_agent.remainingDistance <= _agent.stoppingDistance)
+            if (NavAgent.remainingDistance <= NavAgent.stoppingDistance)
             {
-                if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)
+                if (!NavAgent.hasPath || NavAgent.velocity.sqrMagnitude == 0f)
                 {
                     IsMoving = false;
                 }
             }
         }
+    }
+
+    public Vector2 Coord()
+    {
+        return new Vector2(
+            transform.position.x,
+            transform.position.z
+        );
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.utils;
 
 public class AttackIndicator : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class AttackIndicator : MonoBehaviour
     public float MaskSliderActivePoint;
     private int? _maskSliderTweenId;
     private int? _overtimeFadeTweenId;
+    private int _originalSpriteAlpha;
     public float _windupTime;
+    public float _fadeoutTime;
     public delegate void AfterWindup();
     private AfterWindup _afterWindup;
 
@@ -29,7 +32,9 @@ public class AttackIndicator : MonoBehaviour
 
     public void Windup(float windupTime, AfterWindup afterWindup)
     {
-        _windupTime = windupTime;
+        _windupTime = percent.Find(80f, windupTime);
+        _fadeoutTime = percent.Find(20f, windupTime);
+        _originalSpriteAlpha = utils.GetRGBAAlphaValue(Sprite.color.a);
         _afterWindup = afterWindup;
 
         ResetWindup();
@@ -67,14 +72,16 @@ public class AttackIndicator : MonoBehaviour
             {
                 LeanTween.cancel(_overtimeFadeTweenId.Value);
             }
-            _overtimeFadeTweenId = LeanTween.alpha(Sprite.gameObject, 0f, 0.5f).id;
+            _overtimeFadeTweenId = LeanTween.alpha(Sprite.gameObject, 0f, _fadeoutTime).id;
             LeanTween.descr(_overtimeFadeTweenId.Value).setEase(LeanTweenType.linear);
             LeanTween.descr(_overtimeFadeTweenId.Value).setOnComplete(() =>
             {
                 _overtimeFadeTweenId = null;
+                Sprite.color = utils.SetColorAlpha(Sprite.color, _originalSpriteAlpha);
                 Sprite.gameObject.SetActive(show);
             });
         }
+
         if (WindupSprite != null)
         {
             WindupSprite.gameObject.SetActive(show);
