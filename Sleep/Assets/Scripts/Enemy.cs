@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public int Id;
+    public EnemyState EnemyState;
     public GameObject Piece;
     private IPiece _piece;
     private Vector3? _dirToPlayer;
@@ -15,16 +16,20 @@ public class Enemy : MonoBehaviour
     private float _iqTime;
     private IEnumerator _think;
     private int? _lookAtTwid;
+    private Rigidbody _rb;
 
     // Start is called before the first frame update
     void Start()
     {
+        _rb = GetComponent<Rigidbody>();
         _piece = Piece.GetComponent<IPiece>();
 
         VisualSensorTrigger.ShowIndicator(false);
         AttackRangeSensorTrigger.ShowIndicator(false);
 
-        PieceMover.Init(Id, _piece, ReachedGoal, CloseToTarget);
+        EnemyState = EnemyState.Idle;
+
+        PieceMover.Init(this, _piece, ReachedGoal, CloseToTarget);
         PieceMover.GoTo();
 
         _queueTime = Random.Range(0, 45) * 0.01f;
@@ -51,6 +56,13 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(_iqTime);
 
+        Thinking();
+
+        DoThink();
+    }
+
+    private void Thinking()
+    {
         if (PieceMover.IsMoving)
         {
             if (PieceMover.NavAgent.steeringTarget.x != PieceMover.SteeringTarget.x
@@ -61,7 +73,31 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        DoThink();
+        if (EnemyState == EnemyState.Idle)
+        {
+            // Let's look for something to do
+            DoJob();
+        }
+        else if (EnemyState == EnemyState.FollowingPlayer)
+        {
+            if (PieceMover.IsMoving == false && PieceMover.FollowingPlayer == false)
+            {
+                DoJob();
+            }
+        }
+        else if (EnemyState == EnemyState.DoingStuff)
+        {
+            if (PieceMover.IsMoving == false && PieceMover.FollowingPlayer == false)
+            {
+                DoJob();
+            }
+        }
+    }
+
+    private void DoJob()
+    {
+        EnemyState = EnemyState.DoingStuff;
+        PieceMover.GoTo(Game._.Level<OnlyLevel>().GetRandomPoint());
     }
 
     public void CloseToTarget(TargetType targetType)
@@ -95,6 +131,7 @@ public class Enemy : MonoBehaviour
 
     public void AttackPlayer()
     {
+        EnemyState = EnemyState.AttackingPlayer;
         PieceMover.Stop();
 
         Look(GetLookAtTarget(Game._.Player.transform.position));
@@ -115,17 +152,17 @@ public class Enemy : MonoBehaviour
             return;
         }
 
+        EnemyState = EnemyState.Idle;
+
         bool canWeSeePlayer = CanWeSeePlayer();
-        // Debug.Log("canWeSeePlayer: " + canWeSeePlayer);
         if (canWeSeePlayer)
         {
-            PieceMover.FollowingPlayer = true;
+            PieceMover.FollowPlayer();
             PieceMover.GoTo(Game._.Player.transform.position);
+            return;
         }
-        else
-        {
-            ReachedGoal();
-        }
+
+        ReachedGoal();
     }
 
     private bool IsPlayerInAttackRange()
@@ -179,12 +216,8 @@ public class Enemy : MonoBehaviour
 
         if (_dirToPlayer.HasValue == false)
         {
-            PieceMover.FollowingPlayer = false;
+            PieceMover.FollowPlayer(false);
 
-            float x = Random.Range(-49.0f, 49.0f);
-            float z = Random.Range(-49.0f, 49.0f);
-            Vector3 startPos = new Vector3(x, 0, z);
-            PieceMover.GoTo(startPos);
         }
     }
 
@@ -200,4 +233,9 @@ public class Enemy : MonoBehaviour
 public enum TargetType
 {
     AttackTarget
+}
+
+public enum EnemyState
+{
+    Idle, DoingStuff, FollowingPlayer, AttackingPlayer
 }

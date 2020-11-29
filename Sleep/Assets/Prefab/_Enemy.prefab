@@ -70,6 +70,7 @@ MonoBehaviour:
   PieceMover: {fileID: 225678719}
   SensorType: 2
   Indicator: {fileID: 1757120128}
+  PlayerInside: 0
 --- !u!1 &589215051
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,6 +587,7 @@ MonoBehaviour:
   PieceMover: {fileID: 225678719}
   SensorType: 3
   Indicator: {fileID: 0}
+  PlayerInside: 0
 --- !u!1 &1667766511
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +658,7 @@ MonoBehaviour:
   PieceMover: {fileID: 225678719}
   SensorType: 0
   Indicator: {fileID: 617449105}
+  PlayerInside: 0
 --- !u!1 &1757120126
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,6 +884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Id: 99
+  EnemyState: 0
   Piece: {fileID: 916537862}
   VisualSensorTrigger: {fileID: 1667766515}
   AttackRangeSensorTrigger: {fileID: 535583472}
@@ -935,7 +939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad62187c562c0b4bbb24ccfca5cfb3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParentId: 0
+  Parent: {fileID: 8861879315081428634}
   IsMoving: 0
   FollowingPlayer: 0
   Goal: {fileID: 0}

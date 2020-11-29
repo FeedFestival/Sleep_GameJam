@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class PieceMover : MonoBehaviour
 {
-    public int ParentId;
+    public int Id;
+    public Enemy Parent;
     public bool IsMoving;
     public bool FollowingPlayer;
     public PieceGoal Goal;
@@ -17,13 +19,22 @@ public class PieceMover : MonoBehaviour
     public CloseToTarget EmitCloseToTarget;
     public Vector3 SteeringTarget;
 
-    public void Init(int parentId, IPiece piece, ReachedGoal reachedGoal = null, CloseToTarget closeToTarget = null)
+    public void Init(Enemy parent = null, IPiece piece = null, ReachedGoal reachedGoal = null, CloseToTarget closeToTarget = null)
     {
-        ParentId = parentId;
+        Parent = parent;
         _piece = piece;
         EmitReachedGoal = reachedGoal;
         EmitCloseToTarget = closeToTarget;
         NavAgent = GetComponent<NavMeshAgent>();
+    }
+
+    internal void FollowPlayer(bool folow = true)
+    {
+        if (folow)
+        {
+            Parent.EnemyState = EnemyState.FollowingPlayer;
+        }
+        FollowingPlayer = folow;
     }
 
     public void GoTo(Vector3? point = null)
@@ -50,11 +61,7 @@ public class PieceMover : MonoBehaviour
             NavAgent.isStopped = false;
         }
         _piece.SetState(PieceState.IsMoving);
-        bool canMove = NavAgent.SetDestination(pos);
-        if (canMove == false) {
-            Debug.Log("Can't move there");
-        }
-        // NavAgent.destination = pos;
+        NavAgent.SetDestination(pos);
     }
 
     public void DidWeReachDestionation()

@@ -237,7 +237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 999
   Piece: {fileID: 7554182144720659383}
-  CamFollowOffset: {x: -2, y: 0, z: -14}
+  CamFollowOffset: {x: -2, y: 30, z: -14}
   PieceMover: {fileID: 7146762966947952601}
 --- !u!195 &224637661
 NavMeshAgent:
@@ -289,7 +289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad62187c562c0b4bbb24ccfca5cfb3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParentId: 999
+  Id: 999
+  Parent: {fileID: 0}
   IsMoving: 0
   FollowingPlayer: 0
   Goal: {fileID: 0}
@@ -355,6 +356,7 @@ MonoBehaviour:
   PieceMover: {fileID: 7146762966947952601}
   SensorType: 3
   Indicator: {fileID: 0}
+  PlayerInside: 0
 --- !u!1 &7554182144720659383
 GameObject:
   m_ObjectHideFlags: 0

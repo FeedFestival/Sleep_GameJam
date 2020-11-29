@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Assets.Scripts.LevelService;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class OnlyLevel : MonoBehaviour, ILevel
 {
@@ -16,16 +17,12 @@ public class OnlyLevel : MonoBehaviour, ILevel
 
         for (var i = 0; i < EnemiesCount; i++)
         {
-            float x = Random.Range(-49.0f, 49.0f);
-            float z = Random.Range(-49.0f, 49.0f);
-            Vector3 startPos = new Vector3(x, 0, z);
+            Vector3 startPos = GetRandomPoint();
             GameObject go = CreateFromPrefab(PrefabBank._.Enemy, startPos);
             Enemy enemy = go.GetComponent<Enemy>();
             enemy.Id = _uniqueIdCount;
 
-            x = Random.Range(-49.0f, 49.0f);
-            z = Random.Range(-49.0f, 49.0f);
-            startPos = new Vector3(x, 0, z);
+            startPos = GetRandomPoint();
             go = CreateFromPrefab(PrefabBank._.EnemyGoal, startPos);
             go.transform.SetParent(NavT);
             enemy.PieceMover.Goal = go.GetComponent<PieceGoal>();
@@ -35,6 +32,27 @@ public class OnlyLevel : MonoBehaviour, ILevel
             Enemies.Add(enemy);
 
             _uniqueIdCount++;
+        }
+    }
+
+    public Vector3 GetRandomPoint()
+    {
+        float x = Random.Range(-49.0f, 49.0f);
+        float z = Random.Range(-49.0f, 49.0f);
+        Vector3 randomPoint = new Vector3(x, 0, z);
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomPoint, out hit, 5.0f, NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+        else if (NavMesh.FindClosestEdge(randomPoint, out hit, NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+        else
+        {
+            Debug.Log("Can't find a place for you");
+            return Vector3.zero;
         }
     }
 

@@ -18,7 +18,10 @@ public class SensorTrigger : MonoBehaviour
             {
                 return;
             }
-            if (pieceGoal.ParentId == PieceMover.ParentId)
+            // Debug.Log("pieceGoal.ParentId: " + pieceGoal.ParentId);
+            // Debug.Log("PieceMover.Parent.Id: " + PieceMover.Parent.Id);
+            if (PieceMover.Parent != null && (pieceGoal.ParentId == PieceMover.Parent.Id)
+                || PieceMover.Parent == null && (pieceGoal.ParentId == PieceMover.Id))
             {
                 PieceMover.DidWeReachDestionation();
             }
@@ -28,12 +31,10 @@ public class SensorTrigger : MonoBehaviour
         {
             if (SensorType == SensorType.Visual)
             {
-                PieceMover.FollowingPlayer = true;
-                PlayerInside = true;
+                PieceMover.FollowPlayer();
             }
             else if (SensorType == SensorType.AtackRange)
             {
-                PlayerInside = true;
                 if (PieceMover.EmitCloseToTarget != null)
                 {
                     PieceMover.EmitCloseToTarget(TargetType.AttackTarget);
@@ -48,11 +49,7 @@ public class SensorTrigger : MonoBehaviour
         {
             if (SensorType == SensorType.Visual)
             {
-                PlayerInside = false;
-            }
-            else if (SensorType == SensorType.AtackRange)
-            {
-                PlayerInside = false;
+                PieceMover.FollowPlayer(false);
             }
         }
     }

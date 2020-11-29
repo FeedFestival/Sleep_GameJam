@@ -1486,7 +1486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavT: {fileID: 701089292}
-  EnemiesCount: 40
+  EnemiesCount: 25
   Enemies: []
 --- !u!1001 &664120018
 PrefabInstance:
@@ -1555,11 +1555,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3287736864638768767, guid: eb3b7ed7d13abde4cbfc02490ba9758a,
-        type: 3}
-      propertyPath: CamFollowOffset.y
-      value: 30
-      objectReference: {fileID: 0}
     - target: {fileID: 7146762966947952601, guid: eb3b7ed7d13abde4cbfc02490ba9758a,
         type: 3}
       propertyPath: Goal
@@ -1591,7 +1586,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 695873177}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 701089292}

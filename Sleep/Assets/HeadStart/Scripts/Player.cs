@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     {
         _piece = Piece.GetComponent<IPiece>();
 
-        PieceMover.Init(Id, _piece, ReachedGoal);
+        PieceMover.Init(null, _piece, ReachedGoal);
     }
 
     void Start()
