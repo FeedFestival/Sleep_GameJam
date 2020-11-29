@@ -1309,7 +1309,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0.53729963, y: 0, z: 0, w: 0.8433915}
-  m_LocalPosition: {x: 0, y: 30.3, z: -14.5}
+  m_LocalPosition: {x: 0, y: 30, z: -14.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 356593654}
@@ -1486,7 +1486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavT: {fileID: 701089292}
-  EnemiesCount: 70
+  EnemiesCount: 40
   Enemies: []
 --- !u!1001 &664120018
 PrefabInstance:
@@ -1557,9 +1557,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3287736864638768767, guid: eb3b7ed7d13abde4cbfc02490ba9758a,
         type: 3}
+      propertyPath: CamFollowOffset.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7146762966947952601, guid: eb3b7ed7d13abde4cbfc02490ba9758a,
+        type: 3}
       propertyPath: Goal
       value: 
-      objectReference: {fileID: 2642874116257131439}
+      objectReference: {fileID: 6952454515586256876}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb3b7ed7d13abde4cbfc02490ba9758a, type: 3}
 --- !u!1 &695873177

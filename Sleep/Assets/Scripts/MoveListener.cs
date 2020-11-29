@@ -24,7 +24,7 @@ public class MoveListener : MonoBehaviour
 
             if (objectHit.gameObject.tag == "Floor")
             {
-                Game._.Player.SetNewPosition(hit.point);
+                Game._.Player.PieceMover.GoTo(hit.point);
             }
         }
 

@@ -7,6 +7,7 @@ public class SensorTrigger : MonoBehaviour
     public PieceMover PieceMover;
     public SensorType SensorType;
     public SpriteRenderer Indicator;
+    public bool PlayerInside;
 
     void OnTriggerEnter(Collider other)
     {
@@ -19,7 +20,7 @@ public class SensorTrigger : MonoBehaviour
             }
             if (pieceGoal.ParentId == PieceMover.ParentId)
             {
-                PieceMover.EmitReachedGoal();
+                PieceMover.DidWeReachDestionation();
             }
             return;
         }
@@ -28,10 +29,30 @@ public class SensorTrigger : MonoBehaviour
             if (SensorType == SensorType.Visual)
             {
                 PieceMover.FollowingPlayer = true;
+                PlayerInside = true;
             }
             else if (SensorType == SensorType.AtackRange)
             {
-                PieceMover.EmitCloseToTarget(TargetType.AttackTarget);
+                PlayerInside = true;
+                if (PieceMover.EmitCloseToTarget != null)
+                {
+                    PieceMover.EmitCloseToTarget(TargetType.AttackTarget);
+                }
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            if (SensorType == SensorType.Visual)
+            {
+                PlayerInside = false;
+            }
+            else if (SensorType == SensorType.AtackRange)
+            {
+                PlayerInside = false;
             }
         }
     }

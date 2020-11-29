@@ -7,35 +7,59 @@ using UnityEngine.AI;
 public class Player : MonoBehaviour
 {
     public int Id;
-    public Transform Goal;
-    private NavMeshAgent NavAgent;
+    public GameObject Piece;
+    private IPiece _piece;
     public Vector3 CamFollowOffset;
-    public bool IsMoving;
+    public PieceMover PieceMover;
+    private int? _camCenterTwid;
+    private float _iqTime;
+    private IEnumerator _checkState;
+    private Vector3 _camPos;
 
     void Awake()
     {
-        NavAgent = GetComponent<NavMeshAgent>();
+        _piece = Piece.GetComponent<IPiece>();
+
+        PieceMover.Init(Id, _piece, ReachedGoal);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        // SetNewPosition();
+        _iqTime = UnityEngine.Random.Range(0, 25) * 0.01f;
+
+        _camPos = new Vector3(transform.position.x + CamFollowOffset.x,
+                transform.position.y + CamFollowOffset.y, transform.position.z + CamFollowOffset.z);
+        KeepCamCentered();
+
+        DoCheckState();
     }
 
-    internal void SetNewPosition(Vector3? point = null)
+    void DoCheckState()
     {
-        if (point.HasValue)
+        if (_checkState != null)
         {
-            Goal.position = point.Value;
+            StopCoroutine(_checkState);
         }
-        MoveTo(Goal.position);
+        _checkState = CheckState();
+        StartCoroutine(_checkState);
     }
 
-    internal void MoveTo(Vector3 pos)
+    IEnumerator CheckState()
     {
-        IsMoving = true;
-        NavAgent.destination = pos;
+        yield return new WaitForSeconds(_iqTime);
+
+        if (PieceMover.IsMoving)
+        {
+            Vector3 newCamPos = new Vector3(transform.position.x + CamFollowOffset.x,
+                transform.position.y + CamFollowOffset.y, transform.position.z + CamFollowOffset.z);
+            if (newCamPos.x != _camPos.x || newCamPos.z != _camPos.z)
+            {
+                _camPos = newCamPos;
+                KeepCamCentered();
+            }
+        }
+
+        DoCheckState();
     }
 
     void Update()
@@ -46,43 +70,34 @@ public class Player : MonoBehaviour
         if (h != 0 || v != 0)
         {
             Vector3 movement = new Vector3(h, 0f, v);
-            SetNewPosition(transform.position + movement);
+            PieceMover.GoTo(transform.position + movement);
         }
+    }
+
+    void KeepCamCentered()
+    {
+        if (_camCenterTwid.HasValue)
+        {
+            LeanTween.cancel(_camCenterTwid.Value);
+            _camCenterTwid = null;
+        }
+
+        _camCenterTwid = LeanTween.move(Camera.main.gameObject, _camPos, 0.3f).id;
+        LeanTween.descr(_camCenterTwid.Value).setEase(LeanTweenType.linear);
     }
 
     void LateUpdate()
     {
-        if (IsMoving)
+        if (PieceMover.IsMoving)
         {
-            Vector3 camPos = new Vector3(
-                        transform.position.x + CamFollowOffset.x,
-                        transform.position.y + CamFollowOffset.y,
-                        transform.position.z + CamFollowOffset.z
-                        );
-            // Debug.Log(camPos);
-            Camera.main.transform.position = new Vector3(
-                camPos.x,
-                Camera.main.transform.position.y,
-                camPos.z
-            );
 
-            DidWeReachDestionation();
         }
     }
 
-    private void DidWeReachDestionation()
+    private void ReachedGoal()
     {
-        // Check if we've reached the destination
-        if (!NavAgent.pathPending)
-        {
-            if (NavAgent.remainingDistance <= NavAgent.stoppingDistance)
-            {
-                if (!NavAgent.hasPath || NavAgent.velocity.sqrMagnitude == 0f)
-                {
-                    IsMoving = false;
-                }
-            }
-        }
+        PieceMover.IsMoving = false;
+        _piece.SetState(PieceState.Idle);
     }
 
     public Vector2 Coord()

@@ -17,18 +17,13 @@ public class PieceMover : MonoBehaviour
     public CloseToTarget EmitCloseToTarget;
     public Vector3 SteeringTarget;
 
-    public void Init(int parentId, IPiece piece, ReachedGoal reachedGoal, CloseToTarget closeToTarget)
+    public void Init(int parentId, IPiece piece, ReachedGoal reachedGoal = null, CloseToTarget closeToTarget = null)
     {
         ParentId = parentId;
         _piece = piece;
         EmitReachedGoal = reachedGoal;
         EmitCloseToTarget = closeToTarget;
         NavAgent = GetComponent<NavMeshAgent>();
-    }
-
-    void LateUpdate()
-    {
-        
     }
 
     public void GoTo(Vector3? point = null)
@@ -52,24 +47,22 @@ public class PieceMover : MonoBehaviour
         IsMoving = true;
         if (NavAgent.isStopped)
         {
-            NavAgent.isStopped = true;
+            NavAgent.isStopped = false;
         }
         _piece.SetState(PieceState.IsMoving);
-        NavAgent.destination = pos;
+        bool canMove = NavAgent.SetDestination(pos);
+        if (canMove == false) {
+            Debug.Log("Can't move there");
+        }
+        // NavAgent.destination = pos;
     }
 
-    private void DidWeReachDestionation()
+    public void DidWeReachDestionation()
     {
-        // Check if we've reached the destination
-        if (!NavAgent.pathPending)
+        NavAgent.isStopped = true;
+        if (EmitReachedGoal != null)
         {
-            if (NavAgent.remainingDistance <= NavAgent.stoppingDistance)
-            {
-                if (!NavAgent.hasPath || NavAgent.velocity.sqrMagnitude == 0f)
-                {
-                    EmitReachedGoal();
-                }
-            }
+            EmitReachedGoal();
         }
     }
 }

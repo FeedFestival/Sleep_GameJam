@@ -20,7 +20,6 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         _piece = Piece.GetComponent<IPiece>();
-        PieceMover = gameObject.GetComponent<PieceMover>();
 
         VisualSensorTrigger.ShowIndicator(false);
         AttackRangeSensorTrigger.ShowIndicator(false);
@@ -29,11 +28,11 @@ public class Enemy : MonoBehaviour
         PieceMover.GoTo();
 
         _queueTime = Random.Range(0, 45) * 0.01f;
-        Debug.Log("_queueTime: " + _queueTime);
+        // Debug.Log("_queueTime: " + _queueTime);
         Timer._.iWait(() =>
         {
             _iqTime = Random.Range(0, 25) * 0.01f;
-            Debug.Log("_iqTime: " + _iqTime);
+            // Debug.Log("_iqTime: " + _iqTime);
             DoThink();
         }, _queueTime);
     }
@@ -108,7 +107,7 @@ public class Enemy : MonoBehaviour
     private void AfterAttack()
     {
         bool isPlayerInAttackRange = IsPlayerInAttackRange();
-        Debug.Log("isPlayerInAttackRange: " + isPlayerInAttackRange);
+        // Debug.Log("isPlayerInAttackRange: " + isPlayerInAttackRange);
 
         if (isPlayerInAttackRange)
         {
@@ -117,7 +116,7 @@ public class Enemy : MonoBehaviour
         }
 
         bool canWeSeePlayer = CanWeSeePlayer();
-        Debug.Log("canWeSeePlayer: " + canWeSeePlayer);
+        // Debug.Log("canWeSeePlayer: " + canWeSeePlayer);
         if (canWeSeePlayer)
         {
             PieceMover.FollowingPlayer = true;
@@ -132,7 +131,7 @@ public class Enemy : MonoBehaviour
     private bool IsPlayerInAttackRange()
     {
         float distance = Vector2.Distance(Coord(), Game._.Player.Coord());
-        Debug.Log("distance: " + distance);
+        // Debug.Log("distance: " + distance);
         return distance < 2.5f;
     }
 
@@ -174,7 +173,7 @@ public class Enemy : MonoBehaviour
 
     private void ReachedGoal()
     {
-        Debug.Log("ReachedGoal()");
+        // Debug.Log("ReachedGoal()");
         PieceMover.IsMoving = false;
         _piece.SetState(PieceState.Idle);
 
