@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     public int Id;
     public EnemyState EnemyState;
     public GameObject Piece;
+    public Transform Avatar;
     private IPiece _piece;
     private Vector3? _dirToPlayer;
     public SensorTrigger VisualSensorTrigger;
@@ -64,6 +65,8 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(_iqTime);
 
         Thinking();
+
+        Avatar.LookAt(Camera.main.transform);
 
         DoThink();
     }

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     public int Id;
     public GameObject Piece;
+    public Transform Avatar;
     private IPiece _piece;
     public Vector3 CamFollowOffset;
     public PieceMover PieceMover;
@@ -63,6 +64,8 @@ public class Player : MonoBehaviour
                 KeepCamCentered();
             }
         }
+
+        Avatar.LookAt(Camera.main.transform);
 
         DoCheckState();
     }
