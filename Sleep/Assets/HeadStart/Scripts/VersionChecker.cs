@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using Assets.Scripts.utils;
-using SQLite4Unity3d;
 using UnityEngine;
 
 public class VersionChecker : MonoBehaviour
@@ -53,17 +52,6 @@ public class VersionChecker : MonoBehaviour
         new VersionCheckFile("Timer",
             "HeadStart/Assets/HeadStart/Scripts/Timer.cs",
             Timer._version
-        ),
-        // UpdateController         - GameSpecific
-        // DataModels               - GameSpecific
-        new VersionCheckFile("DataService",
-            "HeadStart/Assets/HeadStart/Scripts/DataService/DataService.cs",
-            DataService._version
-        ),
-        // DomainLogic              - GameSpecific
-        new VersionCheckFile("SQLite",
-            "HeadStart/Assets/HeadStart/Scripts/DataService/SQLite.cs",
-            SQLiteConnection._version
         ),
         new VersionCheckFile("LoadingController",
             "HeadStart/Assets/HeadStart/Scripts/UI/LoadingController.cs",

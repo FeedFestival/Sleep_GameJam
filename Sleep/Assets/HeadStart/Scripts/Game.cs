@@ -12,8 +12,6 @@ public class Game : MonoBehaviour
 
     public LevelController LevelController;
     public Player Player;
-    public DataService DataService;
-    public User User;
     public bool RestartLevel;
     private string LevelToLoad;
     private int _uniqueId;
@@ -28,8 +26,8 @@ public class Game : MonoBehaviour
     {
         Debug.Log("Game - Init");
 
-        GetUser();
-        Debug.Log(User.Name);
+        // GetUser();
+        // Debug.Log(User.Name);
 
         UIController._.Init();
 
@@ -38,25 +36,25 @@ public class Game : MonoBehaviour
         UIController._.LoadingController.TransitionOverlay(show: true, instant: false);
     }
 
-    private void GetUser()
-    {
-        DataService = new DataService();
-        DataService.CreateDBIfNotExists();
-        User = DataService.GetLastUser();
-        if (User == null)
-        {
-            User = new User()
-            {
-                Id = 1,
-                Name = "no-name-user",
-                IsFirstTime = true,
-                HasSavedGame = false,
-                IsUsingSound = true,
-                Language = "en"
-            };
-            DataService.CreateUser(User);
-        }
-    }
+    // private void GetUser()
+    // {
+    //     DataService = new DataService();
+    //     DataService.CreateDBIfNotExists();
+    //     User = DataService.GetLastUser();
+    //     if (User == null)
+    //     {
+    //         User = new User()
+    //         {
+    //             Id = 1,
+    //             Name = "no-name-user",
+    //             IsFirstTime = true,
+    //             HasSavedGame = false,
+    //             IsUsingSound = true,
+    //             Language = "en"
+    //         };
+    //         DataService.CreateUser(User);
+    //     }
+    // }
 
     public void Restart()
     {

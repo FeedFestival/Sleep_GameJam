@@ -39,14 +39,14 @@ public class UIController : MonoBehaviour
     {
         if (MainMenu != null)
         {
-            if (isLevelMainMenu)
-            {
-                MainMenu.Init(showMenu: true, hasSavedGame: Game._.User.HasSavedGame);
-            }
-            else
-            {
-                Destroy(MainMenu.gameObject);
-            }
+            // if (isLevelMainMenu)
+            // {
+            //     MainMenu.Init(showMenu: true, hasSavedGame: Game._.User.HasSavedGame);
+            // }
+            // else
+            // {
+            //     Destroy(MainMenu.gameObject);
+            // }
         }
     }
 }

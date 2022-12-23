@@ -39,8 +39,9 @@ public class HealthBar : MonoBehaviour
 
     private void FollowUnit()
     {
-        //then you calculate the position of the UI element
-        //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
+        // then you calculate the position of the UI element
+        // 0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0.
+        // Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
 
         ViewportPosition = Camera.main.WorldToViewportPoint(UnitToFollow.transform.position);
         WorldObject_ScreenPosition = new Vector2(
